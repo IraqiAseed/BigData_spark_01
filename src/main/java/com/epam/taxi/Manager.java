@@ -1,8 +1,8 @@
-package com.epam.Taxi;
+package com.epam.taxi;
 
-import com.epam.Taxi.model.Driver;
-import com.epam.Taxi.model.Trip;
-import com.epam.Taxi.service.Utils;
+import com.epam.taxi.model.Driver;
+import com.epam.taxi.model.Trip;
+import com.epam.taxi.service.Utils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;

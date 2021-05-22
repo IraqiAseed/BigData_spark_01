@@ -1,7 +1,7 @@
-package com.epam.Taxi.service;
+package com.epam.taxi.service;
 
-import com.epam.Taxi.model.Driver;
-import com.epam.Taxi.model.Trip;
+import com.epam.taxi.model.Driver;
+import com.epam.taxi.model.Trip;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import scala.Tuple2;
