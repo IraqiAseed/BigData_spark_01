@@ -15,27 +15,20 @@ import java.util.stream.Stream;
 public class Utils {
 
     private JavaPairRDD<Long, Integer> getPairsTripIdAndKm(JavaRDD<Trip> trips) {
-        return trips
-                .mapToPair(trip -> new Tuple2<>(trip.driverId(), trip.km()))
+        return trips.mapToPair(trip -> new Tuple2<>(trip.driverId(), trip.km()))
                 .reduceByKey(Integer::sum);
     }
 
     private JavaPairRDD<Long, String> getPairsDriverIdAndName(JavaRDD<Driver> drivers) {
-        return drivers
-                .mapToPair(driver -> new Tuple2<>(driver.id(), driver.name()));
+        return drivers.mapToPair(driver -> new Tuple2<>(driver.id(), driver.name()));
     }
 
-    public long getAmountOfTripsToBostonLongerThanTenKm(JavaRDD<Trip> trips) {
-        return trips.filter(trip -> trip.location().equalsIgnoreCase("boston"))
-                .filter(trip -> trip.km() > 10)
-                .count();
+    public long getAmountOfTripsLongerThanTenKm(JavaRDD<Trip> trips) {
+        return trips.filter(trip -> trip.km() > 10).count();
     }
 
-    public long getSumOfAllKmTripsToBoston(JavaRDD<Trip> trips) {
-        return trips
-                .filter(trip -> trip.location().equalsIgnoreCase("boston"))
-                .map(Trip::km)
-                .reduce(Integer::sum);
+    public long getSumOfAllKmTrips(JavaRDD<Trip> trips) {
+        return trips.map(Trip::km).reduce(Integer::sum);
     }
 
 

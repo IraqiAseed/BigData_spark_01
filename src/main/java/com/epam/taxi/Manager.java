@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.storage.StorageLevel;
 
 import java.util.List;
 
@@ -33,17 +34,22 @@ public class Manager {
         long numberOfTrips = tripsLines.count();
         System.out.println("number of trips: " + numberOfTrips);
 
-        JavaRDD<Trip> trips = tripsLines.map(line -> line.split(" "))
+        JavaRDD<Trip> trips = tripsLines.persist(StorageLevel.MEMORY_AND_DISK())
+                .map(line -> line.split(" "))
                 .map(arg -> new Trip(parseLong(arg[0].trim()), arg[1].trim(), parseInt(arg[2].trim())));
 
-        JavaRDD<Driver> drivers = driversLines.map(line -> line.split(","))
+        JavaRDD<Driver> drivers = driversLines.persist(StorageLevel.MEMORY_AND_DISK())
+                .map(line -> line.split(","))
                 .map(arg -> new Driver(parseLong(arg[0].trim()), arg[1].trim(), arg[2].trim(), arg[3].trim()));
 
         Utils utils = new Utils();
-        long amountOfTripsToBostonLongerThanTenKm = utils.getAmountOfTripsToBostonLongerThanTenKm(trips);
+        JavaRDD<Trip> bostonTrip = trips.persist(StorageLevel.MEMORY_AND_DISK())
+                .filter(trip -> trip.location().equalsIgnoreCase("boston"));
+
+        long amountOfTripsToBostonLongerThanTenKm = utils.getAmountOfTripsLongerThanTenKm(bostonTrip);
         System.out.println("amount of trips to Boston longer than 10 km: " + amountOfTripsToBostonLongerThanTenKm);
 
-        long sumOfAllKmTripsToBoston = utils.getSumOfAllKmTripsToBoston(trips);
+        long sumOfAllKmTripsToBoston = utils.getSumOfAllKmTrips(bostonTrip);
         System.out.println("sum of all km trips to Boston: " + sumOfAllKmTripsToBoston);
 
         List<String> ThreeDriversWithMaxTotalKm = utils.getThreeDriversWithMaxTotalKm(trips, drivers);
