@@ -21,7 +21,7 @@ public class Manager {
 
         Logger.getLogger("org.apache").setLevel(Level.WARN);
 
-        SparkConf sparkConf = new SparkConf().setAppName("Taxi - Spark").setMaster("local[*]");
+        SparkConf sparkConf = new SparkConf().setAppName("Taxi - Spark Java RDD").setMaster("local[*]");
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
 
         JavaRDD<String> driversLines = sc.textFile("data/taxi/drivers.txt");
